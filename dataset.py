@@ -7,7 +7,7 @@ class ABCDataset(Dataset):
     def __init__(self, texts, tokenizer, 
                  context_bars_num=8, 
                  target_bars_num=8,
-                 min_tokens_in_bar=4,
+                 min_tokens_in_bar=0,
                  max_tokens_in_bar=37,
                  is_test=False):
         
@@ -24,6 +24,19 @@ class ABCDataset(Dataset):
             
             if not is_test:
                 if len(notes) < context_bars_num + target_bars_num:
+                    continue
+                
+                num_pauses = 0
+                for i in notes:
+                    if len(i) < 3 and i[0] == "x":
+                        num_pauses+=1
+                    else:
+                        num_pauses = 0
+
+                    if num_pauses > 2:
+                        break
+                
+                if num_pauses > 2:
                     continue
 
                 num_tokens = [len(tokenizer.encode(i)) for i in notes]
