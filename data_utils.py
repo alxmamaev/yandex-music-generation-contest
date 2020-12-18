@@ -31,7 +31,7 @@ def read_abc(path):
     notes = notes.replace(")", ") ")
     notes = notes.replace("|", " | ")
     notes = notes.strip()
-    notes = " ".join(notes.split())
+    notes = " ".join(notes.split(" "))
     
     if not keys or not notes:
         return None
