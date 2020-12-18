@@ -21,12 +21,15 @@ class ABCDataset(Dataset):
             text = text.strip()
             keys, notes = text.split("@")
             notes = notes.split(" | ")
+
+            keys = tokenizer.encode(keys)
+            notes = [tokenizer.encode(i) for i in notes]
             
             if not is_test:
                 if len(notes) < context_bars_num + target_bars_num:
                     continue
 
-                num_tokens = [len(tokenizer.encode(i)) for i in notes]
+                num_tokens = [len(i) for i in notes]
                 if max_tokens_in_bar is not None and max(num_tokens) > max_tokens_in_bar:
                     continue
 
@@ -40,6 +43,11 @@ class ABCDataset(Dataset):
         self.context_bars_num = context_bars_num
         self.target_bars_num = target_bars_num
         self.is_test = is_test
+
+        self.bos = 2
+        self.eos = 3
+        self.flag_token = tokenizer.encode(" @ ")[0]
+        self.bar_token = tokenizer.encode(" | ")[0]
         
     def __len__(self):
         return len(self.keys)
@@ -56,18 +64,24 @@ class ABCDataset(Dataset):
             target = notes[split_indx: split_indx + self.target_bars_num]
 
             if split_indx + self.target_bars_num == len(notes):
-                context_notes.append("!") # to learn ends of soungs
+                context_notes.append([self.flag_token]) # to learn ends of soungs
         else:
             context_notes = notes
             target = []
 
-        context = keys + "@" + " | ".join(context_notes)
-
-        target = " | ".join(target)
-
-        context_tokens = self.tokenizer.encode(context, bos=True, eos=True)
-        target_tokens = self.tokenizer.encode(target, bos=True, eos=True)
+        context_tokens = [self.bos] + keys + [self.flag_token]
         
+        for i in context_notes:
+            context_tokens += i + [self.bar_token]
+
+        context_tokens.append(self.eos)
+
+        target_tokens = [self.bos]
+        for i in target:
+            target_tokens += target_tokens + [self.bar_token]
+
+        target_tokens.append(self.eos)
+
         context_tokens = torch.tensor(context_tokens, dtype=torch.long)
         target_tokens = torch.tensor(target_tokens, dtype=torch.long)
 

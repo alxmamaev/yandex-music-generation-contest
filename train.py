@@ -62,9 +62,6 @@ def main(args):
                             min_tokens_in_bar=args.min_tokens_in_bar,
                             max_tokens_in_bar=args.max_tokens_in_bar)
 
-    for i in range(100):
-        item = train_dataset[0]
-
     trainer = Trainer(
         model=model,
         args=training_args,
