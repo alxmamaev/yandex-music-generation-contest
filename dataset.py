@@ -78,7 +78,7 @@ class ABCDataset(Dataset):
 
         target_tokens = [self.bos]
         for i in target:
-            target_tokens += target_tokens + [self.bar_token]
+            target_tokens += i + [self.bar_token]
 
         target_tokens.append(self.eos)
 
