@@ -17,7 +17,7 @@ def parse():
     parser.add_argument("--save_steps", default=10, type=int)
     parser.add_argument("--gradient_accumulation_steps", default=16, type=int)
     parser.add_argument("--n_workers", default=0, type=int)
-    parser.add_argument("--min_tokens_in_bar", default=0, type=int)
+    parser.add_argument("--min_tokens_in_bar", default=1, type=int)
     parser.add_argument("--max_tokens_in_bar", default=37, type=int)
     parser.add_argument('--check', action='store_true')
 
