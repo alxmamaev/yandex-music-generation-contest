@@ -25,19 +25,6 @@ class ABCDataset(Dataset):
             if not is_test:
                 if len(notes) < context_bars_num + target_bars_num:
                     continue
-                
-                num_pauses = 0
-                for i in notes:
-                    if len(i) < 3 and i[0] == "x":
-                        num_pauses+=1
-                    else:
-                        num_pauses = 0
-
-                    if num_pauses > 2:
-                        break
-                
-                if num_pauses > 2:
-                    continue
 
                 num_tokens = [len(tokenizer.encode(i)) for i in notes]
                 if max_tokens_in_bar is not None and max(num_tokens) > max_tokens_in_bar:
