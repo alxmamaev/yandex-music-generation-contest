@@ -15,6 +15,9 @@ class ABCDataset(Dataset):
         self.keys = []
 
         for text in texts:
+            if text is None:
+                continue
+
             text = text.strip()
             keys, notes = text.split("@")
             notes = notes.split(" | ")
