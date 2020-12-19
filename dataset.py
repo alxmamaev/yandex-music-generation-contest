@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 class ABCDataset(Dataset):
     def __init__(self, texts, tokenizer, 
                  context_bars_num=8, 
-                 target_bars_num=8,
+                 target_bars_num=1,
                  min_tokens_in_bar=1,
                  max_tokens_in_bar=37,
                  is_test=False):

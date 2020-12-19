@@ -136,3 +136,4 @@ runs
 ABCModel/
 *.yttm
 *.txt
+*.bin
