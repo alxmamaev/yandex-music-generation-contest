@@ -15,6 +15,8 @@ def read_abc(path):
 
             if any([line.startswith(key) for key in USEABLE_KEYS]):
                 keys.append(line)
+            else:
+                notes.append(line)
 
     keys = " ".join(keys)
     notes = "".join(notes).strip()
