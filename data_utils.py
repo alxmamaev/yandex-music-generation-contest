@@ -1,7 +1,7 @@
 import torch
 from torch.nn.utils.rnn import pad_sequence
 
-USEABLE_KEYS = ["M:", "L:", "Q:", "K:"]
+USEABLE_KEYS = [i+":" for i in "BCDFGHIKLMmNOPQRrSsTUVWwXZ"]
 
 
 def read_abc(path):
@@ -15,8 +15,6 @@ def read_abc(path):
 
             if any([line.startswith(key) for key in USEABLE_KEYS]):
                 keys.append(line)
-            elif len(line) > 2 and not (line[0].isalpha() and line[0].isupper() and line[1] == ":"):
-                notes.append(line)
 
     keys = " ".join(keys)
     notes = "".join(notes).strip()
