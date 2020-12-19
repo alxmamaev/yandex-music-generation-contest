@@ -15,7 +15,7 @@ def read_abc(path):
 
             if any([line.startswith(key) for key in USEABLE_KEYS]):
                 keys.append(line)
-            elif line and not (line[0].isalpha() and line[0].isupper() and line[1] == ":"):
+            elif len(line) > 2 and not (line[0].isalpha() and line[0].isupper() and line[1] == ":"):
                 notes.append(line)
 
     keys = " ".join(keys)
