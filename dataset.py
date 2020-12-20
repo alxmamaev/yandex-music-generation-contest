@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 class ABCDataset(Dataset):
     def __init__(self, texts, tokenizer, 
                  context_bars_num=8, 
-                 target_bars_num=1,
+                 target_bars_num=8,
                  min_tokens_in_bar=4,
                  max_tokens_in_bar=37,
                  is_test=False):
@@ -50,13 +50,10 @@ class ABCDataset(Dataset):
         keys = self.keys[idx]
         
         if not self.is_test:
-            split_indx = random.randint(self.context_bars_num, len(notes) - self.target_bars_num)
+            split_indx = 8#random.randint(self.context_bars_num, len(notes) - self.target_bars_num)
 
             context_notes = notes[split_indx - self.context_bars_num : split_indx]
             target = notes[split_indx: split_indx + self.target_bars_num]
-
-            if split_indx + self.target_bars_num == len(notes):
-                context_notes.append("@") # to learn ends of soungs
         else:
             context_notes = notes
             target = []

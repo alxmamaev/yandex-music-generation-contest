@@ -1,3 +1,4 @@
+import torch
 from tqdm import tqdm
 from argparse import ArgumentParser
 from model import get_model
@@ -19,6 +20,7 @@ def parse():
     parser.add_argument("--n_workers", default=0, type=int)
     parser.add_argument("--min_tokens_in_bar", default=1, type=int)
     parser.add_argument("--max_tokens_in_bar", default=37, type=int)
+    parser.add_argument("--checkpoint", default=None, type=str)
     parser.add_argument('--check', action='store_true')
 
     return parser.parse_args()
@@ -61,6 +63,10 @@ def main(args):
     train_dataset = ABCDataset(train_texts, tokenizer,
                             min_tokens_in_bar=args.min_tokens_in_bar,
                             max_tokens_in_bar=args.max_tokens_in_bar)
+
+    if args.checkpoint:
+        state_dict = torch.load(args.checkpoint)
+        model.load_state_dict(state_dict)
 
     trainer = Trainer(
         model=model,
