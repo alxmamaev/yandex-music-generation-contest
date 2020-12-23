@@ -26,10 +26,10 @@ def parse():
     return parser.parse_args()
 
 
-def get_training_files(train_dir):
-    train_dir = Path(train_dir)
+def get_training_files(dir):
+    dir = Path(get_training_files)
 
-    return list(train_dir.glob("*.abc"))
+    return list(dir.glob("*.abc"))
 
 
 def main(args):
