@@ -56,9 +56,9 @@ def predict(model, tokenizer, text_path):
 
 def parse():
     parser = ArgumentParser()
-    parser.add_argument("checkpoint")
-    parser.add_argument("device_id")
-    parser.add_argument("world_size")
+    parser.add_argument("checkpoint", type=int)
+    parser.add_argument("device_id", type=int)
+    parser.add_argument("world_size", type=int)
 
     return parser.parse_args()
 
