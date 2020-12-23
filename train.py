@@ -27,7 +27,7 @@ def parse():
 
 
 def get_training_files(dir):
-    dir = Path(get_training_files)
+    dir = Path(dir)
 
     return list(dir.glob("*.abc"))
 
