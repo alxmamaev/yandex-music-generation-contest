@@ -46,16 +46,23 @@ def main(args):
             
             
         for i in range(num_bars):
-            if "x8" in "|\n".join(abc[:i+16]):
+            bar1 = abc[i * 8 : (i + 1) * 8]
+            bar2 = abc[(i + 1) * 8 : (i + 2) * 8]
+
+            if len(bar1) + len(bar2) != 16:
                 continue
 
-            sim = bars_similiarity(abc[i:i+8], abc[i+8:i+16])
+            if "x8" in "|\n".join(bar1 + bar2):
+                continue
+
+            sim = bars_similiarity(bar1, bar2)
             
-            if sim < 0.17:
+            if sim < 0.43:
                 continue
 
             with open(output_dir.joinpath(f"{file_index}.abc"), "w") as f:
-                f.write(keys.replace(" ", "\n") + "\n" + "|\n".join(abc[:i+16]))
+                new_abc = keys.replace(" ", "\n") + "\n" + "|\n".join(bar1 + bar2)
+                f.write(new_abc)
             
             file_index += 1
 
