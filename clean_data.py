@@ -14,6 +14,19 @@ def bars_similiarity(bar1, bar2):
     return sum(distances) / len(distances)
 
 
+def is_repeat(bars):
+    num_repeats = 0
+
+    for i in bars:
+        for j in bars:
+            num_repeats += int(i == j)
+
+    if num_repeats > 4:
+        return True
+    else:
+        return False
+
+
 def parse():
     parser = ArgumentParser()
 
@@ -52,12 +65,15 @@ def main(args):
             if len(bar1) + len(bar2) != 16:
                 continue
 
+            if is_repeat(bar2):
+                continue
+
             if "x8" in "|\n".join(bar1 + bar2):
                 continue
 
             sim = bars_similiarity(bar1, bar2)
             
-            if sim < 0.43:
+            if sim < 0.35:
                 continue
 
             with open(output_dir.joinpath(f"{file_index}.abc"), "w") as f:
