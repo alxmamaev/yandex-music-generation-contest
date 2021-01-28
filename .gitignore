@@ -137,3 +137,7 @@ ABCModel/
 *.yttm
 *.txt
 *.bin
+cleaned_data/
+predict_abc/
+*.zip
+train_corpus

@@ -14,17 +14,15 @@ def bars_similiarity(bar1, bar2):
     return sum(distances) / len(distances)
 
 
-def is_repeat(bars):
+def get_num_repeats(bars):
     num_repeats = 0
 
-    for i in bars:
-        for j in bars:
-            num_repeats += int(i == j)
+    for i, b1 in enumerate(bars):
+        for j, b2 in enumerate(bars):
+            if i != j:
+                num_repeats += int(b1 == b2)
 
-    if num_repeats > 4:
-        return True
-    else:
-        return False
+    return num_repeats
 
 
 def parse():
@@ -42,15 +40,16 @@ def main(args):
 
     input_dir = Path(args.input_dir)
     output_dir = Path(args.output_dir)
+
+    output_dir.mkdir(exist_ok=True)
     file_index = 0
 
     print("preprocessing data...")
     for i in tqdm(list(input_dir.glob("*.abc"))):
-        abc = read_abc(i)
+        keys, abc = read_abc(i)
         if abc is None:
             continue
             
-        keys, abc = abc.split(" @ ")
         abc = abc.replace(" ", "").split("|")
         num_bars = len(abc) // 16
         
@@ -65,7 +64,7 @@ def main(args):
             if len(bar1) + len(bar2) != 16:
                 continue
 
-            if is_repeat(bar2):
+            if get_num_repeats(bar2) > 4:
                 continue
 
             if "x8" in "|\n".join(bar1 + bar2):
@@ -73,7 +72,7 @@ def main(args):
 
             sim = bars_similiarity(bar1, bar2)
             
-            if sim < 0.35:
+            if sim < 0.45:
                 continue
 
             with open(output_dir.joinpath(f"{file_index}.abc"), "w") as f:

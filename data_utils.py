@@ -34,11 +34,9 @@ def read_abc(path):
     notes = " ".join(notes.split(" "))
     
     if not keys or not notes:
-        return None
+        return None, None
 
-    text = keys + " @ " + notes
-
-    return text
+    return keys, notes
 
 
 def collate_function(batch):

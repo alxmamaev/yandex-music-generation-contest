@@ -18,9 +18,10 @@ def parse():
     parser.add_argument("--save_steps", default=10, type=int)
     parser.add_argument("--gradient_accumulation_steps", default=16, type=int)
     parser.add_argument("--n_workers", default=0, type=int)
-    parser.add_argument("--min_tokens_in_bar", default=1, type=int)
-    parser.add_argument("--max_tokens_in_bar", default=37, type=int)
+    parser.add_argument("--min_sequence_lenght", default=16, type=int)
+    parser.add_argument("--max_sequence_lenght", default=512, type=int)
     parser.add_argument("--checkpoint", default=None, type=str)
+    parser.add_argument("--output_dir", default="./ABCModel", type=str)
     parser.add_argument('--check', action='store_true')
 
     return parser.parse_args()
@@ -34,7 +35,7 @@ def get_training_files(dir):
 
 def main(args):
     training_args = TrainingArguments(
-        output_dir="./ABCModel",
+        output_dir=args.output_dir,
         overwrite_output_dir=True,
         num_train_epochs=args.epoch,
         per_device_train_batch_size=args.batch_size,
@@ -57,12 +58,27 @@ def main(args):
         train_paths = train_paths[:10000]
 
     print("Loading train texts...")
-    train_texts = [read_abc(p) for p in train_paths]
+    train_data = []
+    for p in tqdm(train_paths):
+        (keys, notes) = read_abc(p)
+        if keys is None:
+            continue
+        
+        keys_tokens = tokenizer.encode(keys)
+        bars = notes.split(" | ")
+        notes_tokens = [tokenizer.encode(i + " | ") for i in bars]
+
+        ## To avoid OOM
+        sequence_len = sum(len(i) for i in notes_tokens)
+        if not (args.min_sequence_lenght < sequence_len < args.max_sequence_lenght):
+            print("Skip", p)
+            continue
+
+        train_data.append((keys_tokens, notes_tokens))
+        
 
     print("Making dataset...")
-    train_dataset = ABCDataset(train_texts, tokenizer,
-                            min_tokens_in_bar=args.min_tokens_in_bar,
-                            max_tokens_in_bar=args.max_tokens_in_bar)
+    train_dataset = ABCDataset(train_data)
 
     if args.checkpoint:
         state_dict = torch.load(args.checkpoint)
