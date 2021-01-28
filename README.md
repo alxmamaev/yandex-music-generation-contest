@@ -3,7 +3,7 @@ This reposetory contains solution for Yandex music generation contest.
 More about this solution you can read in my blog at medium.
 
 
-[Link to article](example.com)
+[Link to article](https://alxmamaev.medium.com/generating-music-with-ai-or-transformers-go-brrrr-3a3ac5a04126)
 
 
 # Data
